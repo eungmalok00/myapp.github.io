@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video to SRT Converter</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="logo">
+                <i class="fas fa-closed-captioning"></i>
+                <h1>Video to SRT Converter</h1>
+            </div>
+            <p class="tagline">Convert your videos to timed subtitles with one click</p>
+        </header>
+
+        <main class="main-content">
+            <div class="upload-section">
+                <div class="info-card">
+                    <div class="info-icon">
+                        <i class="fas fa-info-circle"></i>
+                    </div>
+                    <div class="info-content">
+                        <h3>How it works:</h3>
+                        <ol>
+                            <li>Select the audio language in your video</li>
+                            <li>Upload your video file (max 50MB)</li>
+                            <li>Wait for automatic transcription</li>
+                            <li>Download your SRT subtitle file</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <form id="uploadForm" class="upload-form">
+                    <div class="form-group">
+                        <label for="language">
+                            <i class="fas fa-language"></i> Select Language
+                        </label>
+                        <div class="language-selector">
+                            <div class="language-option">
+                                <input type="radio" id="lang_en" name="language" value="en" checked>
+                                <label for="lang_en">
+                                    <span class="flag">🇺🇸</span> English
+                                </label>
+                            </div>
+                            <div class="language-option">
+                                <input type="radio" id="lang_km" name="language" value="km">
+                                <label for="lang_km">
+                                    <span class="flag">🇰🇭</span> Khmer
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="video">
+                            <i class="fas fa-video"></i> Select Video File
+                        </label>
+                        <div class="file-drop-area" id="dropArea">
+                            <i class="fas fa-cloud-upload-alt upload-icon"></i>
+                            <p class="drop-text">Drag & drop your video here or click to browse</p>
+                            <input type="file" id="video" name="video" accept=".mp4,.avi,.mov,.mkv,.wmv,.flv,.webm,.m4v,.mpg,.mpeg" required>
+                            <p class="file-info">Max file size: 50MB</p>
+                            <div class="file-list" id="fileList"></div>
+                        </div>
+                        <div class="formats">
+                            <p><strong>Supported formats:</strong> MP4, AVI, MOV, MKV, WMV, FLV, WEBM, M4V, MPG, MPEG</p>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary" id="submitBtn">
+                            <i class="fas fa-sync-alt"></i> Convert to SRT
+                        </button>
+                        <button type="button" class="btn btn-secondary" id="resetBtn">
+                            <i class="fas fa-redo"></i> Reset
+                        </button>
+                    </div>
+                </form>
+
+                <div class="progress-container" id="progressContainer" style="display: none;">
+                    <div class="progress-header">
+                        <h3><i class="fas fa-cogs"></i> Processing Your Video</h3>
+                        <div class="progress-stats" id="progressStats"></div>
+                    </div>
+                    
+                    <div class="progress-bar-container">
+                        <div class="progress-bar" id="progressBar"></div>
+                        <div class="progress-text" id="progressText">0%</div>
+                    </div>
+                    
+                    <div class="progress-stages">
+                        <div class="stage active" id="stage1">
+                            <i class="fas fa-upload"></i>
+                            <span>Uploading</span>
+                        </div>
+                        <div class="stage" id="stage2">
+                            <i class="fas fa-wave-square"></i>
+                            <span>Transcribing</span>
+                        </div>
+                        <div class="stage" id="stage3">
+                            <i class="fas fa-file-alt"></i>
+                            <span>Generating SRT</span>
+                        </div>
+                        <div class="stage" id="stage4">
+                            <i class="fas fa-download"></i>
+                            <span>Ready</span>
+                        </div>
+                    </div>
+
+                    <div class="status-messages">
+                        <div id="statusMessage" class="status-message"></div>
+                    </div>
+                </div>
+
+                <div class="result-section" id="resultSection" style="display: none;">
+                    <div class="result-card">
+                        <div class="result-header">
+                            <i class="fas fa-check-circle success-icon"></i>
+                            <h3>Conversion Complete!</h3>
+                        </div>
+                        
+                        <div class="statistics" id="statistics">
+                            <!-- Statistics will be inserted here -->
+                        </div>
+                        
+                        <div class="download-section">
+                            <button class="btn btn-success" id="downloadBtn">
+                                <i class="fas fa-download"></i> Download SRT File
+                            </button>
+                            <p class="download-help">
+                                Your SRT file is ready. Click above to download.
+                            </p>
+                        </div>
+                        
+                        <div class="new-conversion">
+                            <button class="btn btn-outline" id="newConversionBtn">
+                                <i class="fas fa-plus"></i> Convert Another Video
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="features-section">
+                <h2><i class="fas fa-star"></i> Features</h2>
+                <div class="features-grid">
+                    <div class="feature">
+                        <i class="fas fa-bolt"></i>
+                        <h4>Fast Processing</h4>
+                        <p>Quick transcription using advanced AI technology</p>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-globe"></i>
+                        <h4>Multi-language</h4>
+                        <p>Supports English and Khmer audio</p>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-clock"></i>
+                        <h4>Accurate Timing</h4>
+                        <p>Precise word-level timestamps for perfect sync</p>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-shield-alt"></i>
+                        <h4>Secure</h4>
+                        <p>Your files are processed locally and deleted after conversion</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <p>Video to SRT Converter &copy; 2024 | Built with Whisper AI</p>
+            <div class="footer-links">
+                <a href="#"><i class="fas fa-question-circle"></i> Help</a>
+                <a href="#"><i class="fas fa-envelope"></i> Contact</a>
+                <a href="#"><i class="fab fa-github"></i> GitHub</a>
+            </div>
+        </footer>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
