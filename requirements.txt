@@ -1,4 +1,5 @@
 Flask==2.3.3
 openai-whisper==20231117
 werkzeug==2.3.7
+uuid
 gunicorn
